@@ -40,7 +40,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
     final newName = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: const Color(0xFF1A1D1A), // Gunmetal
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text("Rename Ride", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         content: TextField(
@@ -52,7 +52,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
             hintText: "Enter ride name",
             hintStyle: const TextStyle(color: Colors.white30),
             enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white30)),
-            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFF64B5F6))),
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFFC5B494))), // Matte Sand
           ),
         ),
         actions: [
@@ -62,8 +62,8 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(nameController.text.trim()),
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF64B5F6)),
-            child: const Text("SAVE", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF627254)), // Olive Green
+            child: const Text("SAVE", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -78,7 +78,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Ride renamed successfully"),
-            backgroundColor: Color(0xFF4CAF50),
+            backgroundColor: Color(0xFF627254), // Olive Green
           ),
         );
       }
@@ -91,10 +91,10 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
     final String timeStr = "${DateFormat("hh:mm a").format(_ride.startTime)} - ${DateFormat("hh:mm a").format(_ride.endTime)}";
 
     return Scaffold(
-      backgroundColor: const Color(0xFF111111),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text("Ride Details"),
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         actions: [
           IconButton(
@@ -165,7 +165,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                   height: 220,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1E1E1E),
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.white10, width: 0.5),
                   ),
@@ -226,7 +226,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                     label: "Pit Pauses",
                     value: "${_ride.pitPauseCount}",
                     icon: Icons.local_cafe_outlined,
-                    iconColor: const Color(0xFFFF9800),
+                    iconColor: const Color(0xFFD97724), // Tactical Orange
                   ),
                 ],
               ),
@@ -247,7 +247,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1E1E1E),
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.white10, width: 0.5),
                 ),
@@ -298,14 +298,14 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                 title: "START LOCATION",
                 address: _ride.startLocationName,
                 coords: "${_ride.startLat.toStringAsFixed(6)}, ${_ride.startLng.toStringAsFixed(6)}",
-                iconColor: const Color(0xFF4CAF50),
+                iconColor: const Color(0xFF627254), // Tactical Olive Green
               ),
               const SizedBox(height: 12),
               _buildLocationDetails(
                 title: "END LOCATION",
                 address: _ride.endLocationName,
                 coords: "${_ride.endLat.toStringAsFixed(6)}, ${_ride.endLng.toStringAsFixed(6)}",
-                iconColor: const Color(0xFFF44336),
+                iconColor: const Color(0xFFB85C4C), // Matte Red
               ),
               const SizedBox(height: 24),
 
@@ -325,7 +325,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1E1E1E),
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.white10, width: 0.5),
                   ),
@@ -347,7 +347,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E1E1E),
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.white10, width: 0.5),
                       ),
@@ -356,12 +356,12 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFF9800).withOpacity(0.12),
+                              color: const Color(0xFFD97724).withOpacity(0.12), // Tactical Orange
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
                               Icons.local_cafe,
-                              color: Color(0xFFFF9800),
+                              color: Color(0xFFD97724), // Tactical Orange
                               size: 16,
                             ),
                           ),
@@ -402,7 +402,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                                 Text(
                                   "Duration: ${_formatDuration(pit.duration)}",
                                   style: const TextStyle(
-                                    color: Color(0xFFFF9800),
+                                    color: Color(0xFFD97724), // Tactical Orange
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -433,7 +433,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white10, width: 0.5),
       ),

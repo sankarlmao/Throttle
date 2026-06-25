@@ -41,7 +41,7 @@ class _CalibrationDialogState extends State<CalibrationDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      backgroundColor: const Color(0xFF1E1E1E),
+      backgroundColor: const Color(0xFF1A1D1A),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -49,7 +49,7 @@ class _CalibrationDialogState extends State<CalibrationDialog> {
           children: [
             const Icon(
               Icons.screen_rotation,
-              color: Color(0xFFFF9800), // Amber
+              color: Color(0xFFD97724), // Tactical Orange
               size: 48,
             ),
             const SizedBox(height: 16),
@@ -71,7 +71,7 @@ class _CalibrationDialogState extends State<CalibrationDialog> {
                   child: CircularProgressIndicator(
                     value: _secondsRemaining / 5.0,
                     strokeWidth: 6,
-                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFFF9800)),
+                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFD97724)),
                     backgroundColor: Colors.white12,
                   ),
                 ),
@@ -124,7 +124,7 @@ void showCalibrationDialog(BuildContext context) {
         SnackBar(
           content: Row(
             children: const [
-              Icon(Icons.check_circle, color: Color(0xFF4CAF50)),
+              Icon(Icons.check_circle, color: Color(0xFF627254)), // Tactical Green
               SizedBox(width: 12),
               Text(
                 "Calibrated ✓ — 0° set.",
@@ -132,7 +132,7 @@ void showCalibrationDialog(BuildContext context) {
               ),
             ],
           ),
-          backgroundColor: const Color(0xFF1E1E1E),
+          backgroundColor: const Color(0xFF1A1D1A),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
           shape: RoundedRectangleBorder(

@@ -203,7 +203,7 @@ class _RideMapState extends State<RideMap> {
       Polyline(
         polylineId: const PolylineId('route'),
         points: widget.routePoints,
-        color: const Color(0xFF64B5F6), // Light blue primary
+        color: const Color(0xFFC5B494), // Matte sand primary
         width: 4,
         jointType: JointType.round,
         startCap: Cap.roundCap,

@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
         }
 
         return Scaffold(
-          backgroundColor: const Color(0xFF111111),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -81,7 +81,9 @@ class HomeScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: const BoxDecoration(
-        color: Color(0xFF1E1E1E),
+        gradient: LinearGradient(
+          colors: [Color(0xFF1A1D1A), Color(0xFF121412)],
+        ),
         border: Border(
           bottom: BorderSide(color: Colors.white10, width: 0.5),
         ),
@@ -93,7 +95,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               const Icon(
                 Icons.motorcycle,
-                color: Color(0xFF64B5F6),
+                color: Color(0xFFC5B494), // Matte Sand
                 size: 24,
               ),
               const SizedBox(width: 8),
@@ -146,17 +148,17 @@ class HomeScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => showCalibrationDialog(context),
       child: Container(
-        color: const Color(0xFFFF9800).withOpacity(0.15),
+        color: const Color(0xFFD97724).withOpacity(0.15), // Tactical Orange
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: const [
-            Icon(Icons.warning_amber_rounded, color: Color(0xFFFF9800), size: 18),
+            Icon(Icons.warning_amber_rounded, color: Color(0xFFD97724), size: 18),
             SizedBox(width: 10),
             Expanded(
               child: Text(
                 "Calibrate lean sensor before riding →",
                 style: TextStyle(
-                  color: Color(0xFFFF9800),
+                  color: Color(0xFFD97724),
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
@@ -178,8 +180,8 @@ class HomeScreen extends StatelessWidget {
           icon: const Icon(Icons.tune, size: 18),
           label: Text(provider.isCalibrated ? "RE-CALIBRATE" : "CALIBRATE"),
           style: OutlinedButton.styleFrom(
-            foregroundColor: const Color(0xFFFF9800),
-            side: const BorderSide(color: Color(0xFFFF9800), width: 1.2),
+            foregroundColor: const Color(0xFFD97724), // Tactical Orange
+            side: const BorderSide(color: Color(0xFFD97724), width: 1.2),
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
@@ -192,15 +194,17 @@ class HomeScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E),
+            gradient: const LinearGradient(
+              colors: [Color(0xFF1E221E), Color(0xFF151815)],
+            ),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFF64B5F6).withOpacity(0.2), width: 0.8),
+            border: Border.all(color: const Color(0xFFC5B494).withOpacity(0.25), width: 0.8),
           ),
           child: Row(
             children: [
               const Icon(
                 Icons.stars,
-                color: Color(0xFF64B5F6),
+                color: Color(0xFFC5B494), // Matte Sand
                 size: 20,
               ),
               const SizedBox(width: 12),
@@ -238,7 +242,9 @@ class HomeScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E),
+            gradient: const LinearGradient(
+              colors: [Color(0xFF1E221E), Color(0xFF151815)],
+            ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.white10, width: 0.5),
           ),
@@ -288,34 +294,49 @@ class HomeScreen extends StatelessWidget {
         const SizedBox(height: 32),
 
         // START RIDE Button
-        ElevatedButton(
-          onPressed: () async {
-            try {
-              await provider.startRide();
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(e.toString()),
-                  backgroundColor: const Color(0xFFF44336),
-                ),
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF4CAF50), // Green
-            foregroundColor: Colors.white,
-            minimumSize: const Size(double.infinity, 56),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+        Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF627254), Color(0xFF4A5542)], // Matte Olive Gradient
             ),
-            elevation: 4,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF627254).withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          child: const Text(
-            "START RIDE",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.0,
+          child: ElevatedButton(
+            onPressed: () async {
+              try {
+                await provider.startRide();
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(e.toString()),
+                    backgroundColor: const Color(0xFFB85C4C), // Matte Red
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 56),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text(
+              "START RIDE",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.0,
+              ),
             ),
           ),
         ),
@@ -349,7 +370,7 @@ class HomeScreen extends StatelessWidget {
               label: "Current Speed",
               value: "${provider.currentSpeedKmh.toStringAsFixed(1)} km/h",
               icon: Icons.speed,
-              iconColor: const Color(0xFF64B5F6),
+              iconColor: const Color(0xFFC5B494),
             ),
             StatsCard(
               label: "Average Speed",
@@ -375,7 +396,7 @@ class HomeScreen extends StatelessWidget {
               label: "Pit Pauses",
               value: "${provider.pitPauseCount}",
               icon: Icons.local_cafe_outlined,
-              iconColor: const Color(0xFFFF9800),
+              iconColor: const Color(0xFFD97724),
             ),
           ],
         ),
@@ -398,43 +419,52 @@ class HomeScreen extends StatelessWidget {
           children: [
             // PIT PAUSE / RESUME button
             Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  if (provider.isPaused) {
-                    provider.resumeRide();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Ride Resumed ✓"),
-                        backgroundColor: Color(0xFF4CAF50),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  } else {
-                    final msg = await provider.pauseRide();
-                    final lastPit = provider.pitStops.last;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Pit stop recorded at ${lastPit.locationName}"),
-                        backgroundColor: const Color(0xFFFF9800),
-                        duration: const Duration(seconds: 3),
-                      ),
-                    );
-                  }
-                },
-                icon: Icon(
-                  provider.isPaused ? Icons.play_arrow : Icons.local_cafe,
-                  color: Colors.white,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFD97724), Color(0xFFAD5E1C)], // Matte Tactical Orange Gradient
+                  ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                label: Text(
-                  provider.isPaused ? "RESUME RIDE" : "PIT PAUSE",
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF9800), // Amber
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(0, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    if (provider.isPaused) {
+                      provider.resumeRide();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Ride Resumed ✓"),
+                          backgroundColor: Color(0xFF627254),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    } else {
+                      final msg = await provider.pauseRide();
+                      final lastPit = provider.pitStops.last;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Pit stop recorded at ${lastPit.locationName}"),
+                          backgroundColor: const Color(0xFFD97724),
+                          duration: const Duration(seconds: 3),
+                        ),
+                      );
+                    }
+                  },
+                  icon: Icon(
+                    provider.isPaused ? Icons.play_arrow : Icons.local_cafe,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    provider.isPaused ? "RESUME" : "PIT PAUSE",
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(0, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
@@ -443,19 +473,28 @@ class HomeScreen extends StatelessWidget {
 
             // STOP RIDE button
             Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () => _handleStopRide(context, provider),
-                icon: const Icon(Icons.stop, color: Colors.white),
-                label: const Text(
-                  "STOP RIDE",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFB85C4C), Color(0xFF8E4337)], // Matte Red Gradient
+                  ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF44336), // Red
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(0, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                child: ElevatedButton.icon(
+                  onPressed: () => _handleStopRide(context, provider),
+                  icon: const Icon(Icons.stop, color: Colors.white),
+                  label: const Text(
+                    "STOP RIDE",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(0, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
@@ -484,7 +523,7 @@ class HomeScreen extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          backgroundColor: const Color(0xFF1E1E1E),
+          backgroundColor: const Color(0xFF1A1D1A),
           title: const Text(
             "Ride Summary",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -513,7 +552,7 @@ class HomeScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Color(0xFF64B5F6)),
+                      borderSide: const BorderSide(color: Color(0xFFC5B494)),
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
@@ -539,13 +578,13 @@ class HomeScreen extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("Ride Discarded"),
-                    backgroundColor: Color(0xFFF44336),
+                    backgroundColor: Color(0xFFB85C4C),
                   ),
                 );
               },
               child: const Text(
                 "DISCARD",
-                style: TextStyle(color: Color(0xFFF44336), fontWeight: FontWeight.bold),
+                style: TextStyle(color: Color(0xFFB85C4C), fontWeight: FontWeight.bold),
               ),
             ),
             ElevatedButton(
@@ -605,7 +644,7 @@ class HomeScreen extends StatelessWidget {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: const Color(0xFF1E1E1E),
+          backgroundColor: const Color(0xFF1A1D1A),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: const Text("Still riding?", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           content: const Text(
@@ -618,7 +657,7 @@ class HomeScreen extends StatelessWidget {
                 Navigator.of(context).pop(); // Dismiss auto-stop dialog
                 provider.dismissAutoStopWarning(); // Reset timers
               },
-              child: const Text("CONTINUE", style: TextStyle(color: Color(0xFF64B5F6))),
+              child: const Text("CONTINUE", style: TextStyle(color: Color(0xFFC5B494))),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -626,7 +665,7 @@ class HomeScreen extends StatelessWidget {
                 final ride = await provider.stopRide();
                 _showSaveRideDialog(context, provider, ride);
               },
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF44336)),
+              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFB85C4C)),
               child: const Text("STOP & SAVE", style: TextStyle(color: Colors.white)),
             ),
           ],

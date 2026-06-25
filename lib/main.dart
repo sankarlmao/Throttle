@@ -23,18 +23,18 @@ class MotoTrackApp extends StatelessWidget {
       title: 'MotoTrack',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
-        primaryColor: const Color(0xFF64B5F6),
-        scaffoldBackgroundColor: const Color(0xFF111111),
-        cardColor: const Color(0xFF1E1E1E),
+        primaryColor: const Color(0xFF627254), // Tactical Olive Green
+        scaffoldBackgroundColor: const Color(0xFF121412), // Stealth Matte Black
+        cardColor: const Color(0xFF1A1D1A), // Gunmetal Card Black
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF64B5F6),
-          secondary: Color(0xFFFF9800), // Amber
-          background: Color(0xFF111111),
-          surface: Color(0xFF1E1E1E),
-          error: Color(0xFFF44336), // Red
+          primary: Color(0xFF627254),
+          secondary: Color(0xFFC5B494), // Matte Sand
+          background: Color(0xFF121412),
+          surface: Color(0xFF1A1D1A),
+          error: Color(0xFFB85C4C), // Matte Red
         ),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1E1E1E),
+          backgroundColor: Color(0xFF1A1D1A),
           elevation: 0,
           titleTextStyle: TextStyle(
             fontSize: 20,
@@ -44,9 +44,9 @@ class MotoTrackApp extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFF1E1E1E),
-          selectedItemColor: Color(0xFF64B5F6),
-          unselectedItemColor: Colors.white38,
+          backgroundColor: Color(0xFF1A1D1A),
+          selectedItemColor: Color(0xFFC5B494), // Sand
+          unselectedItemColor: Colors.white30,
           selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           unselectedLabelStyle: TextStyle(fontSize: 11),
           type: BottomNavigationBarType.fixed,
@@ -54,7 +54,8 @@ class MotoTrackApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF64B5F6),
+            backgroundColor: const Color(0xFF627254), // Tactical Green
+            foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -96,7 +97,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text("Cannot view history while a ride is active."),
-                backgroundColor: Color(0xFFFF9800),
+                backgroundColor: Color(0xFFD97724), // Tactical Orange
                 duration: Duration(seconds: 2),
               ),
             );
@@ -109,12 +110,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.speed),
-            activeIcon: Icon(Icons.speed, color: Color(0xFF64B5F6)),
+            activeIcon: Icon(Icons.speed, color: Color(0xFFC5B494)),
             label: 'Ride',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            activeIcon: Icon(Icons.history, color: Color(0xFF64B5F6)),
+            activeIcon: Icon(Icons.history, color: Color(0xFFC5B494)),
             label: 'History',
           ),
         ],

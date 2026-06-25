@@ -38,11 +38,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Color _getLeanBadgeColor(double maxLeanLeft, double maxLeanRight) {
     final double maxLean = maxLeanLeft > maxLeanRight ? maxLeanLeft : maxLeanRight;
     if (maxLean < 35.0) {
-      return const Color(0xFF4CAF50); // Green
+      return const Color(0xFF627254); // Tactical Olive Green
     } else if (maxLean <= 45.0) {
-      return const Color(0xFFFF9800); // Amber
+      return const Color(0xFFD97724); // Tactical Orange
     } else {
-      return const Color(0xFFF44336); // Red
+      return const Color(0xFFB85C4C); // Matte Red
     }
   }
 
@@ -50,7 +50,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: const Color(0xFF1A1D1A),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text("Delete Ride", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         content: const Text("Are you sure you want to delete this ride from your history?", style: TextStyle(color: Colors.white70)),
@@ -61,7 +61,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF44336)),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFB85C4C)),
             child: const Text("DELETE", style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -77,7 +77,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Ride deleted"),
-            backgroundColor: Color(0xFFF44336),
+            backgroundColor: Color(0xFFB85C4C),
           ),
         );
       }
@@ -87,10 +87,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF111111),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text("Ride History"),
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         centerTitle: false,
         actions: [
@@ -285,9 +285,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1E221E), Color(0xFF151815)],
+        ),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF64B5F6).withOpacity(0.15), width: 0.8),
+        border: Border.all(color: const Color(0xFFC5B494).withOpacity(0.25), width: 0.8),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

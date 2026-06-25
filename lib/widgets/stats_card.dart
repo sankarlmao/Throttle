@@ -18,7 +18,9 @@ class StatsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1E221E), Color(0xFF151815)],
+        ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: Colors.white.withOpacity(0.08),

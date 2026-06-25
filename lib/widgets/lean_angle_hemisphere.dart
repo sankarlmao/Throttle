@@ -220,7 +220,7 @@ class _HemispherePainter extends CustomPainter {
       );
 
       final Paint maxDotPaint = Paint()
-        ..color = const Color(0xFFF44336) // Red
+        ..color = const Color(0xFFB85C4C) // Matte Red
         ..style = PaintingStyle.fill;
 
       final Paint maxDotOuterPaint = Paint()
@@ -236,7 +236,7 @@ class _HemispherePainter extends CustomPainter {
       final TextSpan labelSpan = TextSpan(
         text: "MAX\n${maxLean.round()}°",
         style: const TextStyle(
-          color: Color(0xFFF44336),
+          color: Color(0xFFB85C4C), // Matte Red
           fontSize: 9,
           fontWeight: FontWeight.bold,
           height: 1.1,
@@ -270,7 +270,7 @@ class _HemispherePainter extends CustomPainter {
     );
 
     final Paint needlePaint = Paint()
-      ..color = const Color(0xFF64B5F6) // Light blue primary
+      ..color = const Color(0xFFC5B494) // Matte Sand primary
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4
       ..strokeCap = StrokeCap.round;
@@ -279,10 +279,10 @@ class _HemispherePainter extends CustomPainter {
 
     // Draw Needle Pivot Joint (Circle at the bottom-center)
     final Paint pivotPaint = Paint()
-      ..color = const Color(0xFF64B5F6)
+      ..color = const Color(0xFFC5B494) // Matte Sand primary
       ..style = PaintingStyle.fill;
     final Paint pivotRingPaint = Paint()
-      ..color = const Color(0xFF111111)
+      ..color = const Color(0xFF121412) // Stealth Matte Black
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 

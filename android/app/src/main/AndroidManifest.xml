@@ -12,7 +12,7 @@
 
     <application
         android:label="MotoTrack"
-        android:name="\${applicationName}"
+        android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         
         <!-- Google Maps API Key -->
