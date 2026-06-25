@@ -188,6 +188,52 @@ class HomeScreen extends StatelessWidget {
         ),
         const SizedBox(height: 32),
 
+        // Lifetime Distance Card
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1E1E1E),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFF64B5F6).withOpacity(0.2), width: 0.8),
+          ),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.stars,
+                color: Color(0xFF64B5F6),
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "TOTAL RIDE DISTANCE",
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white.withOpacity(0.4),
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "${provider.lifetimeDistanceKm.toStringAsFixed(1)} km",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+
         // Start Location Card
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

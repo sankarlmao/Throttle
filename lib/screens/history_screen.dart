@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../models/ride_model.dart';
+import '../providers/ride_provider.dart';
 import '../services/database_service.dart';
 import 'ride_detail_screen.dart';
 
@@ -70,6 +72,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
       await DatabaseService.instance.deleteRide(rideId);
       _refreshRides();
       if (mounted) {
+        // Update the provider's lifetime stats so the home screen reflects the deletion
+        Provider.of<RideProvider>(context, listen: false).loadLifetimeStats();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Ride deleted"),
@@ -148,9 +152,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
           return ListView.builder(
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.all(12),
-            itemCount: rides.length,
+            itemCount: rides.length + 1,
             itemBuilder: (context, index) {
-              final ride = rides[index];
+              if (index == 0) {
+                return _buildHistorySummaryBanner(rides);
+              }
+              final ride = rides[index - 1];
               final maxLeanAngle = ride.maxLeanLeft > ride.maxLeanRight
                   ? ride.maxLeanLeft
                   : ride.maxLeanRight;
@@ -253,6 +260,70 @@ class _HistoryScreenState extends State<HistoryScreen> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildHistorySummaryBanner(List<RideModel> rides) {
+    double totalDist = 0.0;
+    Duration totalDuration = Duration.zero;
+    for (var r in rides) {
+      totalDist += r.totalDistanceKm;
+      totalDuration += r.rideDuration;
+    }
+
+    String formatHours(Duration d) {
+      final hours = d.inHours;
+      final minutes = d.inMinutes.remainder(60);
+      if (hours > 0) {
+        return "${hours}h ${minutes}m";
+      } else {
+        return "${minutes}m";
+      }
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF64B5F6).withOpacity(0.15), width: 0.8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildSummaryMetric("TOTAL DISTANCE", "${totalDist.toStringAsFixed(1)} km"),
+          Container(width: 0.5, height: 30, color: Colors.white12),
+          _buildSummaryMetric("TOTAL RIDES", "${rides.length}"),
+          Container(width: 0.5, height: 30, color: Colors.white12),
+          _buildSummaryMetric("TOTAL TIME", formatHours(totalDuration)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryMetric(String label, String value) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+            color: Colors.white.withOpacity(0.4),
+            letterSpacing: 0.5,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 

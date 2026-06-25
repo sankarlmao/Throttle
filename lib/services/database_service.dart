@@ -131,6 +131,15 @@ class DatabaseService {
     });
   }
 
+  Future<double> getLifetimeDistance() async {
+    final db = await instance.database;
+    final result = await db.rawQuery('SELECT SUM(total_distance_km) as total FROM rides');
+    if (result.isNotEmpty && result.first['total'] != null) {
+      return result.first['total'] as double;
+    }
+    return 0.0;
+  }
+
   Future close() async {
     final db = await instance.database;
     db.close();

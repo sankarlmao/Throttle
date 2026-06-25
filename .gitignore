@@ -1,0 +1,18 @@
+# Flutter/Dart build artifacts
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+
+# Android-specific ignores
+/android/local.properties
+/android/key.properties
+*.keystore
+*.jks
+.gradle/
+captures/
+
+# OS-specific files
+.DS_Store
+Thumbs.db

@@ -43,6 +43,7 @@ class RideProvider extends ChangeNotifier {
   int stopCount = 0;
   int pitPauseCount = 0;
   Duration rideDuration = Duration.zero;
+  double lifetimeDistanceKm = 0.0;
 
   DateTime? rideStartTime;
   DateTime? currentPitStartTime;
@@ -82,6 +83,7 @@ class RideProvider extends ChangeNotifier {
     _startDateTimer();
     _startListeningSensorsAlways();
     _fetchInitialLocation();
+    loadLifetimeStats();
   }
 
   void _startDateTimer() {
@@ -491,8 +493,14 @@ class RideProvider extends ChangeNotifier {
     return rideModel;
   }
 
+  Future<void> loadLifetimeStats() async {
+    lifetimeDistanceKm = await _dbService.getLifetimeDistance();
+    notifyListeners();
+  }
+
   Future<void> saveRide(RideModel ride) async {
     await _dbService.insertRide(ride);
+    await loadLifetimeStats();
     notifyListeners();
   }
 
