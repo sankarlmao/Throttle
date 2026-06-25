@@ -17,7 +17,7 @@ if (localPropertiesFile.exists()) {
 val mapsApiKey = localProperties.getProperty("MAPS_API_KEY") ?: ""
 
 android {
-    namespace = "com.sankarlmao.mototrack"
+    namespace = "com.sankarlmao.throttle"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -27,7 +27,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.sankarlmao.mototrack"
+        applicationId = "com.sankarlmao.throttle"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

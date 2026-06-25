@@ -1,5 +1,5 @@
 name: throttle
-description: MotoTrack - A motorcycle ride tracker with lean angle monitoring and GPS.
+description: Throttle - A motorcycle ride tracker with lean angle monitoring and GPS.
 publish_to: 'none'
 version: 1.0.0+1
 

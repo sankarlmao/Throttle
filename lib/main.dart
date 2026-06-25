@@ -9,18 +9,18 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (_) => RideProvider(),
-      child: const MotoTrackApp(),
+      child: const ThrottleApp(),
     ),
   );
 }
 
-class MotoTrackApp extends StatelessWidget {
-  const MotoTrackApp({Key? key}) : super(key: key);
+class ThrottleApp extends StatelessWidget {
+  const ThrottleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MotoTrack',
+      title: 'Throttle',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         primaryColor: const Color(0xFF627254), // Tactical Olive Green

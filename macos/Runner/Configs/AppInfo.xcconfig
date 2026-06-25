@@ -8,7 +8,7 @@
 PRODUCT_NAME = throttle
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.sankarlmao.mototrack.throttle
+PRODUCT_BUNDLE_IDENTIFIER = com.sankarlmao.throttle
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.sankarlmao.mototrack. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 com.sankarlmao.throttle. All rights reserved.

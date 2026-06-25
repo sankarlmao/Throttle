@@ -1,4 +1,4 @@
-package com.sankarlmao.mototrack.throttle
+package com.sankarlmao.throttle
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -11,7 +11,7 @@ class DatabaseService {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('mototrack.db');
+    _database = await _initDB('throttle.db');
     return _database!;
   }
 

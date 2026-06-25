@@ -100,7 +100,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               const Text(
-                "MotoTrack",
+                "Throttle",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
