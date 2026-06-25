@@ -1,0 +1,30 @@
+name: throttle
+description: MotoTrack - A motorcycle ride tracker with lean angle monitoring and GPS.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  sensors_plus: ^4.0.2          # Accelerometer + gyroscope
+  geolocator: ^11.0.0           # GPS location
+  google_maps_flutter: ^2.5.3   # Map widget
+  sqflite: ^2.3.0               # Local SQLite storage for ride history
+  path_provider: ^2.1.1         # File paths for sqflite
+  intl: ^0.19.0                 # Date/time formatting
+  provider: ^6.1.1              # State management
+  permission_handler: ^11.3.0   # Runtime permissions
+  geocoding: ^2.1.1             # Reverse geocode GPS coords to place names
+  wakelock_plus: ^1.1.4         # Keep screen awake during rides
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
