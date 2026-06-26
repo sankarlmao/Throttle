@@ -16,18 +16,24 @@ class StatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color accentColor = iconColor ?? const Color(0xFFFF5722); // Custom color or GP Orange
     return Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1E221E), Color(0xFF151815)],
+        color: const Color(0xFF161916),
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(12),
+          bottomRight: Radius.circular(12),
+          topLeft: Radius.circular(4),
+          bottomLeft: Radius.circular(4),
         ),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.08),
-          width: 0.5,
+        border: Border(
+          left: BorderSide(color: accentColor, width: 4.5),
+          top: BorderSide(color: Colors.white.withOpacity(0.04), width: 0.8),
+          right: BorderSide(color: Colors.white.withOpacity(0.04), width: 0.8),
+          bottom: BorderSide(color: Colors.white.withOpacity(0.04), width: 0.8),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -35,30 +41,35 @@ class StatsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                label.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white.withOpacity(0.4),
-                  letterSpacing: 1.0,
+              Expanded(
+                child: Text(
+                  label.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white.withOpacity(0.4),
+                    letterSpacing: 1.0,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               if (icon != null)
                 Icon(
                   icon,
-                  size: 14,
-                  color: iconColor ?? Colors.white.withOpacity(0.3),
+                  size: 13,
+                  color: accentColor.withOpacity(0.7),
                 ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
               color: Colors.white,
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
         ],

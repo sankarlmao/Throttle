@@ -22,6 +22,7 @@ class RideModel {
   final double endLat;
   final double endLng;
   final List<LatLng> routePoints;
+  final List<double> routeSpeeds;
   final List<PitStopModel> pitStops;
 
   RideModel({
@@ -44,12 +45,17 @@ class RideModel {
     required this.endLat,
     required this.endLng,
     required this.routePoints,
+    required this.routeSpeeds,
     required this.pitStops,
   });
 
   Map<String, dynamic> toMap() {
     final routeJson = jsonEncode(
-      routePoints.map((p) => {'lat': p.latitude, 'lng': p.longitude}).toList(),
+      List.generate(routePoints.length, (i) {
+        final p = routePoints[i];
+        final speed = i < routeSpeeds.length ? routeSpeeds[i] : 0.0;
+        return {'lat': p.latitude, 'lng': p.longitude, 'speed': speed};
+      }),
     );
     return {
       'id': id,
@@ -76,11 +82,13 @@ class RideModel {
 
   factory RideModel.fromMap(Map<String, dynamic> map, List<PitStopModel> stops) {
     final routePointsList = <LatLng>[];
+    final routeSpeedsList = <double>[];
     if (map['route_points_json'] != null) {
       final decoded = jsonDecode(map['route_points_json'] as String) as List;
       for (var item in decoded) {
         final m = item as Map<String, dynamic>;
         routePointsList.add(LatLng(m['lat'] as double, m['lng'] as double));
+        routeSpeedsList.add(((m['speed'] ?? 0.0) as num).toDouble());
       }
     }
 
@@ -104,6 +112,7 @@ class RideModel {
       endLat: map['end_lat'] as double,
       endLng: map['end_lng'] as double,
       routePoints: routePointsList,
+      routeSpeeds: routeSpeedsList,
       pitStops: stops,
     );
   }
@@ -128,6 +137,7 @@ class RideModel {
     double? endLat,
     double? endLng,
     List<LatLng>? routePoints,
+    List<double>? routeSpeeds,
     List<PitStopModel>? pitStops,
   }) {
     return RideModel(
@@ -150,6 +160,7 @@ class RideModel {
       endLat: endLat ?? this.endLat,
       endLng: endLng ?? this.endLng,
       routePoints: routePoints ?? this.routePoints,
+      routeSpeeds: routeSpeeds ?? this.routeSpeeds,
       pitStops: pitStops ?? this.pitStops,
     );
   }

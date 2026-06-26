@@ -8,6 +8,8 @@ import '../widgets/calibration_dialog.dart';
 import '../widgets/lean_angle_hemisphere.dart';
 import '../widgets/ride_map.dart';
 import '../widgets/stats_card.dart';
+import '../widgets/f1_start_lights.dart';
+import '../widgets/speed_graph.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -51,6 +53,8 @@ class HomeScreen extends StatelessWidget {
                               currentLeanAngle: provider.currentLeanAngle,
                               maxLeanRight: provider.maxLeanRight,
                               maxLeanLeft: provider.maxLeanLeft,
+                              currentSpeedKmh: provider.currentSpeedKmh,
+                              helmetColor: provider.helmetColor,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -296,30 +300,41 @@ class HomeScreen extends StatelessWidget {
         // START RIDE Button
         Container(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF627254), Color(0xFF4A5542)], // Matte Olive Gradient
+            gradient: LinearGradient(
+              colors: [provider.helmetColor, provider.helmetColor.withOpacity(0.85)],
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF627254).withOpacity(0.3),
+                color: provider.helmetColor.withOpacity(0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: ElevatedButton(
-            onPressed: () async {
-              try {
-                await provider.startRide();
-              } catch (e) {
+            onPressed: () {
+              if (!provider.isCalibrated) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(e.toString()),
-                    backgroundColor: const Color(0xFFB85C4C), // Matte Red
+                  const SnackBar(
+                    content: Text("Please calibrate sensors before starting the ride."),
+                    backgroundColor: Color(0xFFD97724),
                   ),
                 );
+                return;
               }
+              F1StartLightsOverlay.show(context, () async {
+                try {
+                  await provider.startRide();
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(e.toString()),
+                      backgroundColor: const Color(0xFFB85C4C), // Matte Red
+                    ),
+                  );
+                }
+              });
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
@@ -411,6 +426,13 @@ class HomeScreen extends StatelessWidget {
               : null,
           isInteractive: true,
           height: 200,
+          routeColor: provider.helmetColor,
+        ),
+        const SizedBox(height: 16),
+        SpeedGraph(
+          speeds: provider.routeSpeeds,
+          lineColor: provider.helmetColor,
+          height: 140,
         ),
         const SizedBox(height: 24),
 

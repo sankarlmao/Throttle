@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../models/ride_model.dart';
+import '../providers/ride_provider.dart';
 import '../services/database_service.dart';
 import '../widgets/lean_angle_hemisphere.dart';
 import '../widgets/ride_map.dart';
 import '../widgets/stats_card.dart';
+import '../widgets/speed_graph.dart';
 
 class RideDetailScreen extends StatefulWidget {
   final RideModel ride;
@@ -257,6 +260,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                       currentLeanAngle: 0.0, // center needle for static view
                       maxLeanRight: _ride.maxLeanRight,
                       maxLeanLeft: _ride.maxLeanLeft,
+                      currentSpeedKmh: 0.0,
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -280,6 +284,24 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(height: 24),
+
+              // Speed Telemetry Graph
+              const Text(
+                "SPEED PROFILE",
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white38,
+                  letterSpacing: 1.0,
+                ),
+              ),
+              const SizedBox(height: 8),
+              SpeedGraph(
+                speeds: _ride.routeSpeeds,
+                lineColor: Provider.of<RideProvider>(context, listen: false).helmetColor,
+                height: 140,
               ),
               const SizedBox(height: 24),
 

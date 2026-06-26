@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'providers/ride_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/history_screen.dart';
+import 'screens/paddock_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,6 +81,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     HomeScreen(),
     HistoryScreen(),
+    PaddockScreen(),
   ];
 
   @override
@@ -96,7 +98,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             // Warn user if they try to leave the active ride tab
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text("Cannot view history while a ride is active."),
+                content: Text("Cannot leave telemetry dashboard while a ride is active."),
                 backgroundColor: Color(0xFFD97724), // Tactical Orange
                 duration: Duration(seconds: 2),
               ),
@@ -117,6 +119,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             icon: Icon(Icons.history),
             activeIcon: Icon(Icons.history, color: Color(0xFFC5B494)),
             label: 'History',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sports_motorsports),
+            activeIcon: Icon(Icons.sports_motorsports, color: Color(0xFFC5B494)),
+            label: 'Paddock',
           ),
         ],
       ),

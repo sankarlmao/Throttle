@@ -9,6 +9,7 @@ class RideMap extends StatefulWidget {
   final LatLng? currentPosition;
   final bool isInteractive;
   final double height;
+  final Color? routeColor;
 
   const RideMap({
     Key? key,
@@ -17,6 +18,7 @@ class RideMap extends StatefulWidget {
     this.currentPosition,
     this.isInteractive = true,
     this.height = 200.0,
+    this.routeColor,
   }) : super(key: key);
 
   @override
@@ -203,8 +205,8 @@ class _RideMapState extends State<RideMap> {
       Polyline(
         polylineId: const PolylineId('route'),
         points: widget.routePoints,
-        color: const Color(0xFFC5B494), // Matte sand primary
-        width: 4,
+        color: widget.routeColor ?? const Color(0xFFFF5722), // Glowing route path
+        width: 5,
         jointType: JointType.round,
         startCap: Cap.roundCap,
         endCap: Cap.roundCap,

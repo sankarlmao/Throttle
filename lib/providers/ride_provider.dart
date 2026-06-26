@@ -30,10 +30,32 @@ class RideProvider extends ChangeNotifier {
   bool isCalibrated = false;
   Vector3 calibrationOffset = Vector3.zero();
 
+  // Phone Orientation vectors (calibrated)
+  Vector3 uZ = Vector3(0.0, 0.0, 1.0); // vertical axis (downward gravity)
+  Vector3 uX = Vector3(1.0, 0.0, 0.0); // lateral axis (right)
+  Vector3 uY = Vector3(0.0, 1.0, 0.0); // longitudinal axis (forward)
+  double lastAccelLeanAngle = 0.0;
+  Stopwatch? _gyroStopwatch;
+  StreamSubscription<GyroscopeEvent>? _gyroSubscription;
+
   // Lean Angle
   double currentLeanAngle = 0.0;
   double maxLeanRight = 0.0;
   double maxLeanLeft = 0.0;
+
+  // Rider Profile (inspired by F1 / MotoGP paddock)
+  String riderName = "Alex Rider";
+  Color helmetColor = const Color(0xFFFF5722); // Racing Orange
+  String riderCountry = "Indonesia";
+  int riderPoints = 245;
+  String currentClass = "Division 1";
+
+  void updateRiderProfile({required String name, required Color color, required String country}) {
+    riderName = name;
+    helmetColor = color;
+    riderCountry = country;
+    notifyListeners();
+  }
 
   // Ride Metrics
   double currentSpeedKmh = 0.0;
@@ -48,6 +70,7 @@ class RideProvider extends ChangeNotifier {
   DateTime? rideStartTime;
   DateTime? currentPitStartTime;
   List<LatLng> routePoints = [];
+  List<double> routeSpeeds = [];
   List<PitStopModel> pitStops = [];
   Position? lastPosition;
   final Stopwatch rideStopwatch = Stopwatch();
@@ -95,13 +118,25 @@ class RideProvider extends ChangeNotifier {
   }
 
   void _startListeningSensorsAlways() {
-    _sensorSubscription?.cancel();
-    _sensorSubscription = _sensorService.accelerometerEventsStream.listen(
-      _onAccelerometerEvent,
-      onError: (error) {
-        debugPrint("Accelerometer stream error: $error");
-      },
-    );
+    try {
+      _sensorSubscription?.cancel();
+      _sensorSubscription = _sensorService.accelerometerEventsStream.listen(
+        _onAccelerometerEvent,
+        onError: (error) {
+          debugPrint("Accelerometer stream error: $error");
+        },
+      );
+
+      _gyroSubscription?.cancel();
+      _gyroSubscription = _sensorService.gyroscopeEventsStream.listen(
+        _onGyroscopeEvent,
+        onError: (error) {
+          debugPrint("Gyroscope stream error: $error");
+        },
+      );
+    } catch (e) {
+      debugPrint("Sensors not available in this environment: $e");
+    }
   }
 
   Future<void> _fetchInitialLocation() async {
@@ -121,30 +156,78 @@ class RideProvider extends ChangeNotifier {
 
   void _onAccelerometerEvent(AccelerometerEvent event) {
     _latestRawEvent = event;
+    if (!isCalibrated) return;
 
-    // Apply offset
-    double calibratedX = event.x - calibrationOffset.x;
-    double calibratedY = event.y - calibrationOffset.y;
-    double calibratedZ = event.z - calibrationOffset.z;
+    double mag = sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
+    if (mag > 0.1) {
+      double cosTheta = (event.x * uZ.x + event.y * uZ.y + event.z * uZ.z) / mag;
+      cosTheta = cosTheta.clamp(-1.0, 1.0);
+      double angle = acos(cosTheta) * (180.0 / pi);
 
-    // leanAngle in degrees: roll = atan2(calibratedX, calibratedZ) * (180 / pi)
-    // Positive = right, negative = left
-    double leanAngle = atan2(calibratedX, calibratedZ) * (180.0 / pi);
+      // Determine sign using lateral projection
+      double lateralProj = event.x * uX.x + event.y * uX.y + event.z * uX.z;
+      if (lateralProj < 0.0) {
+        angle = -angle;
+      }
+      lastAccelLeanAngle = angle;
+    }
+  }
 
-    // Keep it in range [-90, 90]
-    if (leanAngle > 90.0) leanAngle = 90.0;
-    if (leanAngle < -90.0) leanAngle = -90.0;
+  void _onGyroscopeEvent(GyroscopeEvent event) {
+    if (!isCalibrated) return;
 
-    currentLeanAngle = leanAngle;
+    double dt = 0.0;
+    if (_gyroStopwatch == null) {
+      _gyroStopwatch = Stopwatch()..start();
+      return;
+    } else {
+      dt = _gyroStopwatch!.elapsedMicroseconds / 1000000.0;
+      _gyroStopwatch!.reset();
+    }
 
-    // Track max lean angles during active and unpaused ride
+    if (dt <= 0.0 || dt > 0.5) return;
+
+    // Project gyroscope onto longitudinal axis to get roll rate
+    double gyroRollRate = event.x * uY.x + event.y * uY.y + event.z * uY.z;
+
+    // Project gyroscope onto vertical axis to get yaw rate
+    double gyroYawRate = event.x * uZ.x + event.y * uZ.y + event.z * uZ.z;
+
+    double speedMps = currentSpeedKmh / 3.6;
+    double g = 9.80665;
+    double physicsLeanAngle = 0.0;
+
+    if (speedMps > 1.0) {
+      physicsLeanAngle = atan(speedMps * gyroYawRate / g) * (180.0 / pi);
+    }
+
+    double refLeanAngle = 0.0;
+    if (speedMps > 2.0) {
+      refLeanAngle = physicsLeanAngle;
+    } else {
+      refLeanAngle = lastAccelLeanAngle;
+    }
+
+    double alpha = 0.98;
+    if (speedMps > 3.0 && gyroYawRate.abs() > 0.05) {
+      alpha = 0.995;
+    }
+
+    double rollRateDeg = gyroRollRate * (180.0 / pi);
+    double newLeanAngle = alpha * (currentLeanAngle + rollRateDeg * dt) + (1.0 - alpha) * refLeanAngle;
+
+    if (newLeanAngle > 60.0) newLeanAngle = 60.0;
+    if (newLeanAngle < -60.0) newLeanAngle = -60.0;
+
+    currentLeanAngle = newLeanAngle;
+
     if (isRiding && !isPaused) {
-      if (leanAngle > 0.0) {
-        if (leanAngle > maxLeanRight) {
-          maxLeanRight = leanAngle;
+      if (currentLeanAngle > 0.0) {
+        if (currentLeanAngle > maxLeanRight) {
+          maxLeanRight = currentLeanAngle;
         }
       } else {
-        double leftAbs = leanAngle.abs();
+        double leftAbs = currentLeanAngle.abs();
         if (leftAbs > maxLeanLeft) {
           maxLeanLeft = leftAbs;
         }
@@ -170,16 +253,54 @@ class RideProvider extends ChangeNotifier {
         isCalibrating = false;
 
         if (_latestRawEvent != null) {
-          calibrationOffset = Vector3(
-            _latestRawEvent!.x,
-            _latestRawEvent!.y,
-            _latestRawEvent!.z,
-          );
+          double x = _latestRawEvent!.x;
+          double y = _latestRawEvent!.y;
+          double z = _latestRawEvent!.z;
+          double mag = sqrt(x * x + y * y + z * z);
+          if (mag > 0.1) {
+            uZ = Vector3(x / mag, y / mag, z / mag);
+          } else {
+            uZ = Vector3(0.0, 0.0, 1.0);
+          }
+
+          double absX = x.abs();
+          double absY = y.abs();
+          double absZ = z.abs();
+
+          if (absY >= absX && absY >= absZ) {
+            uX = Vector3(1.0, 0.0, 0.0);
+          } else if (absX >= absY && absX >= absZ) {
+            uX = Vector3(0.0, 1.0, 0.0);
+          } else {
+            uX = Vector3(1.0, 0.0, 0.0);
+          }
+
+          double dot = uX.x * uZ.x + uX.y * uZ.y + uX.z * uZ.z;
+          double uxX = uX.x - dot * uZ.x;
+          double uxY = uX.y - dot * uZ.y;
+          double uxZ = uX.z - dot * uZ.z;
+          double uxMag = sqrt(uxX * uxX + uxY * uxY + uxZ * uxZ);
+          if (uxMag > 0.1) {
+            uX = Vector3(uxX / uxMag, uxY / uxMag, uxZ / uxMag);
+          } else {
+            uX = Vector3(1.0, 0.0, 0.0);
+          }
+
+          double uyX = uZ.y * uX.z - uZ.z * uX.y;
+          double uyY = uZ.z * uX.x - uZ.x * uX.z;
+          double uyZ = uZ.x * uX.y - uZ.y * uX.x;
+          uY = Vector3(uyX, uyY, uyZ);
+
+          calibrationOffset = Vector3(x, y, z);
           isCalibrated = true;
         } else {
+          uZ = Vector3(0.0, 0.0, 1.0);
+          uX = Vector3(1.0, 0.0, 0.0);
+          uY = Vector3(0.0, 1.0, 0.0);
           calibrationOffset = Vector3.zero();
           isCalibrated = true;
         }
+        _gyroStopwatch = null;
         notifyListeners();
         onComplete();
       }
@@ -207,6 +328,7 @@ class RideProvider extends ChangeNotifier {
     pitPauseCount = 0;
     rideDuration = Duration.zero;
     routePoints.clear();
+    routeSpeeds.clear();
     pitStops.clear();
     lastPosition = null;
     showAutoStopWarning = false;
@@ -228,6 +350,7 @@ class RideProvider extends ChangeNotifier {
       currentPosition = currentPos;
       final startLatLng = LatLng(currentPos.latitude, currentPos.longitude);
       routePoints.add(startLatLng);
+      routeSpeeds.add(0.0);
       startLocationName = await _locationService.getPlaceName(currentPos.latitude, currentPos.longitude);
     } else {
       startLocationName = "Unknown Start Location";
@@ -312,10 +435,12 @@ class RideProvider extends ChangeNotifier {
       if (distanceMeters > 1.0) {
         totalDistanceKm += (distanceMeters / 1000.0);
         routePoints.add(newPoint);
+        routeSpeeds.add(currentSpeedKmh);
         lastPosition = pos;
       }
     } else {
       routePoints.add(newPoint);
+      routeSpeeds.add(currentSpeedKmh);
       lastPosition = pos;
     }
 
@@ -483,6 +608,7 @@ class RideProvider extends ChangeNotifier {
       endLat: endLat,
       endLng: endLng,
       routePoints: List.from(routePoints),
+      routeSpeeds: List.from(routeSpeeds),
       pitStops: List.from(pitStops),
     );
 
@@ -494,7 +620,12 @@ class RideProvider extends ChangeNotifier {
   }
 
   Future<void> loadLifetimeStats() async {
-    lifetimeDistanceKm = await _dbService.getLifetimeDistance();
+    try {
+      lifetimeDistanceKm = await _dbService.getLifetimeDistance();
+    } catch (e) {
+      // Fallback for mock/test environments without native sqflite binding
+      lifetimeDistanceKm = 0.0;
+    }
     notifyListeners();
   }
 
@@ -507,6 +638,7 @@ class RideProvider extends ChangeNotifier {
   @override
   void dispose() {
     _sensorSubscription?.cancel();
+    _gyroSubscription?.cancel();
     _locationSubscription?.cancel();
     _uiTimer?.cancel();
     _dateTimer?.cancel();
